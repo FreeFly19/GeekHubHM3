@@ -1,1 +1,1 @@
-# GeekHubHM3
+GeekHub homework #2 by Alexandr Melnik
