@@ -83,7 +83,7 @@ class Application
 
         foreach ($pattern as $n => $elem) {
             if (preg_match('|^\{(.*)\}$|', $elem)) {
-                $param_name = substr($elem, 1, strlen($elem)-2);
+                $param_name = substr($elem, 1, strlen($elem) - 2);
                 $result[$param_name] = $path[$n];
             }
         }

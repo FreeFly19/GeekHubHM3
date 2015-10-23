@@ -9,7 +9,9 @@ use AquariumShop\Item;
 
 $app = new Application();
 
-$app->get('/',function(){
+$app->get(
+    '/',
+    function () {
         $shop = new Shop();
         $user = new User("Sasha", 100.99);
         $user2 = new User("Natasha", 50.3);
@@ -29,11 +31,15 @@ $app->get('/',function(){
         echo "<hr>";
         echo $user;
         echo $user2;
-    });
+    }
+);
 
 
-$app->get('/Hello/{name}/',function($name){
+$app->get(
+    '/Hello/{name}/',
+    function ($name) {
         echo "Hello, $name!!!";
-});
+    }
+);
 
 $app->run();

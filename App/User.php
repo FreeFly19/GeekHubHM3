@@ -83,13 +83,13 @@ class User
 
     public function __toString()
     {
-        $result = "Name of user: ". $this->getName() . "<br>\nHave " . $this->getMoney() . " money<br>\nHave a items:<br>\n";
+        $result = "Name of user: " . $this->getName() . "<br>\nHave " . $this->getMoney(
+            ) . " money<br>\nHave a items:<br>\n";
 
-        foreach ($this->getAllItems() as $item)
-        {
-            $result.= $item;
+        foreach ($this->getAllItems() as $item) {
+            $result .= $item;
         }
-        $result.= "<br>\n";
+        $result .= "<br>\n";
         return $result;
     }
 }

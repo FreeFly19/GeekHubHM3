@@ -41,10 +41,11 @@ class Product
 
     public function setPrice($price)
     {
-        if($price>0)
+        if ($price > 0) {
             $this->price = $price;
-        else
+        } else {
             throw new \Exception("Price can't be less or equals 0");
+        }
     }
 
     public function __toString()
