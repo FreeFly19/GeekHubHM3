@@ -7,34 +7,37 @@ class Application
 
     public function get($pattern, $callback)
     {
-
+        $this->controllers[$pattern] = $callback;
     }
 
-    protected function getPath($reqused_uri = null)
+    protected static function getPath($reqused_uri = null)
     {
         $reqused_uri = $reqused_uri ? $reqused_uri : $_SERVER['REQUEST_URI'];
 
         $uri = explode('?', $reqused_uri, 2);
         $path = explode('/', $uri[0]);
 
-        foreach ($path as $i => $val)
-            if ($val == "")
+        foreach ($path as $i => $val) {
+            if ($val == "") {
                 unset($path[$i]);
+            }
+        }
+        $path = array_values($path);
         return $path;
     }
 
-    protected function getParams($reqused_uri = null)
+    protected static function getParams($reqused_uri = null)
     {
         $reqused_uri = $reqused_uri ? $reqused_uri : $_SERVER['REQUEST_URI'];
         $uri = explode('?', $reqused_uri, 2);
 
         $params = [];
 
-        if (isset($uri[1]))
-        {
+        if (isset($uri[1])) {
             $ps = explode('&', $uri[1]);
-            if ($ps[0] == "")
+            if ($ps[0] == "") {
                 $ps = [];
+            }
 
 
             foreach ($ps as $param) {
@@ -49,9 +52,55 @@ class Application
         return $params;
     }
 
+    protected static function isEqualsPath($controllerPathPattern)
+    {
+        $path = static::getPath();
+
+        $controllerPathPattern = static::getPath($controllerPathPattern);
+
+        if (count($path) != count($controllerPathPattern)) {
+            return false;
+        }
+
+        foreach ($controllerPathPattern as $n => $elem) {
+            if (preg_match('|^\{(.*)\}$|', $elem)) {
+                continue;
+            }
+            if ($elem != $path[$n]) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    protected static function getRequestPathVariables($pattern)
+    {
+        $result = [];
+
+        $path = static::getPath();
+        $pattern = static::getPath($pattern);
+
+        foreach ($pattern as $n => $elem) {
+            if (preg_match('|^\{(.*)\}$|', $elem)) {
+                $param_name = substr($elem, 1, strlen($elem)-2);
+                $result[$param_name] = $path[$n];
+            }
+        }
+
+        return $result;
+    }
+
     public function run()
     {
-        var_dump($this->getPath());
-        var_dump($this->getParams());
+        foreach ($this->controllers as $pattern => $controller) {
+            if (static::isEqualsPath($pattern)) {
+                $requst_arr = static::getRequestPathVariables($pattern);
+
+                call_user_func_array($controller, $requst_arr);
+                return;
+            }
+        }
+        die("Error 404. This path have not a controller.");
     }
 }

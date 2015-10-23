@@ -5,11 +5,24 @@ $app = new App\Application();
 
 
 $app->get(
-    'main/{name}',
+    '/',
+    function(){
+        echo "Hello, world!!";
+    }
+);
+
+$app->get(
+    '/{name}',
     function($name){
         echo "Hello, $name";
     }
 );
 
+$app->get(
+    'main/{name}/{kel}',
+    function($name, $kel){
+        echo "Hello,". $name. " " .$kel;
+    }
+);
 
 $app->run();
